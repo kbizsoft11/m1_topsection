@@ -1,0 +1,28 @@
+<?php
+// get data from custom table for top section
+$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+$tableName = Mage::getSingleton('core/resource')->getTableName('kbizsoft_topsection');
+$select = $connection->select()->from($tableName)->limit(1); 
+$data = $connection->fetchRow($select);
+?>
+
+<div class="banner_container" <?php if($data['background_color']!=""){ ?> style="background-color:<?php echo $data['background_color']; ?>" <?php } ?>>
+    <?php if ($data['status'] == '1'): ?>
+        <?php if (!empty($data['hyperlink'])): ?>
+		<style>
+		.cms-home #mainNav, .cms-stata-profplan #mainNav{
+			top:40px;
+		}
+		.banner_container p.feature_plus {
+			text-align: center;
+			font-size: 14px;
+			font-weight: 500;
+			color: #ffffff;
+			padding: 10px 0px;
+			margin: 0px;
+		}
+		</style>
+            <a href="<?php echo $this->escapeUrl($data['hyperlink']); ?>"><p class="feature_plus"><?php echo $this->escapeHtml($data['heading']); ?></p></a>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>

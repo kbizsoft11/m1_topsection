@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <adsection translate="title" module="divantecommon_adsection">
+            <title>Topsection</title>
+            <sort_order>1500</sort_order>
+            <children>
+                <section translate="title" module="divantecommon_adsection">
+                    <title>TopSections</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/section/index</action>
+                </section>
+            </children>
+        </adsection>
+    </menu>
+</config>

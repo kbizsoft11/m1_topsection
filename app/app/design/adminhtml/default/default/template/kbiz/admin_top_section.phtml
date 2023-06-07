@@ -1,0 +1,94 @@
+<?php
+// Retrieve the data from the database
+$connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+$tableName = Mage::getSingleton('core/resource')->getTableName('kbizsoft_topsection');
+
+$select = $connection->select()
+    ->from($tableName)
+    ->limit(1); // Assuming there's only one row in the table
+
+$data = $connection->fetchRow($select);
+
+// Replace the above code with your SQL query or logic to fetch the data from the database
+
+?>
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById("adsection-form");
+        var saveButton = document.getElementById("save-button");
+
+        saveButton.addEventListener("click", function () {
+            var formData = new FormData(form);
+
+            // Add any additional data you want to send to the server
+            // formData.append("additionalField", additionalFieldValue);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "<?php echo $this->getUrl('adminhtml/section/save') ?>", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // Handle the server response
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        // Handle success case
+                        document.getElementById("success").innerText = "Data saved successfully!";
+                    } else {
+                        // Handle error case
+                        console.log("Error saving data: " + response.error);
+                    }
+                } else {
+                    console.log("Request failed. Status: " + xhr.status);
+                }
+            };
+            xhr.send(formData);
+        });
+
+        // Populate the form fields with the retrieved data
+        document.getElementById("heading").value = "<?php echo $data['heading']; ?>";
+        document.getElementById("hyperlink").value = "<?php echo $data['hyperlink']; ?>";
+        document.getElementById("status").value = "<?php echo $data['status']; ?>";
+
+        // Set the background color from the retrieved data
+        document.getElementById("background_color").value = "<?php echo $data['background_color']; ?>";
+    });
+</script>
+
+<h1>Top section</h1>
+<p id="success" style="color:green"></p>
+<form id="adsection-form" method="post">
+    <input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>">
+    <fieldset>
+        <legend><?php echo $this->__('Top section') ?></legend>
+
+        <p>
+            <label for="heading"><?php echo $this->__('Heading') ?>:</label><br>
+            <textarea id="heading" name="heading" style="width: 100%; height: 150px;"></textarea>
+        </p>
+
+        <p>
+            <label for="hyperlink"><?php echo $this->__('Hyperlink') ?>:</label><br>
+            <input type="text" id="hyperlink" name="hyperlink" value="" style="width: 100%;">
+        </p>
+
+        <p>
+            <label for="status"><?php echo $this->__('Status') ?>:</label><br>
+            <select id="status" name="status">
+                <option value="1"><?php echo $this->__('Enabled') ?></option>
+                <option value="0"><?php echo $this->__('Disabled') ?></option>
+            </select>
+        </p>
+
+        <p>
+            <label for="background_color"><?php echo $this->__('Background Color') ?>:</label><br>
+            <input type="color" id="background_color" name="background_color" >
+        </p>
+
+        <p style="text-align: right;">
+            <button type="button" id="save-button" class="scalable save" title="<?php echo $this->__('Save') ?>" style="width: 20%;">
+                <span><span><span><?php echo $this->__('Save') ?></span></span></span>
+            </button>
+        </p>
+    </fieldset>
+</form>
